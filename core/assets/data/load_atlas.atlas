@@ -1,0 +1,132 @@
+
+load_atlas.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+black
+  rotate: false
+  xy: 2, 18
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+blue
+  rotate: false
+  xy: 2, 52
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+button_blue
+  rotate: false
+  xy: 674, 474
+  size: 14, 14
+  split: 3, 3, 3, 4
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+button_dark_blue
+  rotate: false
+  xy: 2, 2
+  size: 14, 14
+  split: 3, 3, 3, 4
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+button_gray
+  rotate: false
+  xy: 36, 36
+  size: 14, 14
+  split: 3, 3, 3, 4
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+button_green
+  rotate: false
+  xy: 102, 70
+  size: 14, 14
+  split: 3, 3, 3, 4
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+button_red
+  rotate: false
+  xy: 613, 440
+  size: 14, 14
+  split: 3, 3, 3, 4
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+button_yellow
+  rotate: false
+  xy: 674, 458
+  size: 14, 14
+  split: 3, 3, 3, 4
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+cow
+  rotate: false
+  xy: 2, 288
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+cursor
+  rotate: false
+  xy: 608, 426
+  size: 3, 28
+  split: 0, 1, 10, 13
+  orig: 3, 28
+  offset: 0, 0
+  index: -1
+empty
+  rotate: false
+  xy: 2, 86
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+grass
+  rotate: false
+  xy: 204, 288
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+green
+  rotate: false
+  xy: 608, 456
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+red
+  rotate: false
+  xy: 68, 52
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stone
+  rotate: false
+  xy: 204, 86
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+way
+  rotate: false
+  xy: 406, 288
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+wolf
+  rotate: false
+  xy: 406, 86
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
