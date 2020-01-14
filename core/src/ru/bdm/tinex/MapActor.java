@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import ru.bdm.tinex.logic.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MapActor extends Group {
     Map map;
@@ -14,7 +16,7 @@ public class MapActor extends Group {
     float scale = 50f;
     boolean scaleChanged = true;
     final static float duration = 1f;
-    HashMap<Element, AnimalActor> hash = new HashMap<>();
+    HashMap<Element, ElementActor> hash = new HashMap<>();
 
     public MapActor(Map map, Skin skin) {
         this.skin = skin;
@@ -26,14 +28,14 @@ public class MapActor extends Group {
         for (Element e : map.getElements()) {
             if (!hash.containsKey(e)) {
 
-                AnimalActor actor = new AnimalActor(e, skin) ;
+                ElementActor actor = new ElementActor(e, skin) ;
                 Pos p = map.get(e);
                 actor.setBounds(p.x * scale, p.y * scale, 0, 0);
                 actor.updateSize(scale);
                 addActor(actor);
                 hash.put(e, actor);
             } else {
-                AnimalActor actor = hash.get(e);
+                ElementActor actor = hash.get(e);
                 if (scaleChanged) {
                     actor.updateSize(scale);
                 }
@@ -44,6 +46,20 @@ public class MapActor extends Group {
         if (scaleChanged) {
             scaleChanged = false;
             changeScaled();
+        }
+        cleanElements();
+    }
+
+    private void cleanElements(){
+        Set<Element> removeSet = new HashSet<>();
+        for(Element element: hash.keySet()){
+            if (!map.contains(element)){
+                hash.get(element).removeActor();
+                removeSet.add(element);
+            }
+        }
+        for(Element element: removeSet){
+            hash.remove(element);
         }
     }
 

@@ -1,7 +1,5 @@
 package ru.bdm.tinex.logic;
 
-import java.util.Random;
-
 public abstract class AI {
 
     public final int id;
@@ -18,5 +16,5 @@ public abstract class AI {
 
 
 
-    abstract Result work(Map map);
+    abstract Result work(byte[][] data);
 }

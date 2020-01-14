@@ -1,16 +1,16 @@
 package ru.bdm.tinex;
 
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import ru.bdm.tinex.logic.Element;
 import ru.bdm.tinex.logic.Pos;
 
-public class AnimalActor extends Group {
+public class ElementActor extends Group {
 
     Element element;
     Skin skin;
@@ -19,7 +19,7 @@ public class AnimalActor extends Group {
     final static float duration = 1f;
     public static final float[] ways = new float[]{0, 90, 180, 270};
 
-    public AnimalActor(Element element, Skin skin) {
+    public ElementActor(Element element, Skin skin) {
 
         this.element = element;
         this.skin = skin;
@@ -63,6 +63,8 @@ public class AnimalActor extends Group {
             }
         };
         action.setDuration(duration);
+        action.setUseShortestDirection(true);
+        action.setInterpolation(Interpolation.pow2);
         action.setRotation(way);
         return action;
     }
@@ -76,6 +78,7 @@ public class AnimalActor extends Group {
             }
         };
         move.setPosition(p.x * scale, p.y * scale);
+        move.setInterpolation(Interpolation.pow2);
         move.setDuration(duration);
         return move;
     }
@@ -89,8 +92,17 @@ public class AnimalActor extends Group {
             }
         };
         action.setDuration(duration);
+        action.setInterpolation(Interpolation.pow2);
         action.setSize(size, size);
         return action;
+    }
+    public void removeActor(){
+        updateSize(0);
+        AfterAction afterAction = new AfterAction();
+        RemoveActorAction removeAction = new RemoveActorAction();
+        afterAction.setAction(removeAction);
+        removeAction.setTarget(this);
+        addAction(afterAction);
     }
 
 }

@@ -9,9 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ru.bdm.tinex.GameScreenManager;
 import ru.bdm.tinex.MapActor;
 import ru.bdm.tinex.StartGame;
-import ru.bdm.tinex.logic.Element;
-import ru.bdm.tinex.logic.Map;
-import ru.bdm.tinex.logic.Pos;
+import ru.bdm.tinex.logic.*;
 
 public class MapScreen extends MainScreen {
 
@@ -20,8 +18,7 @@ public class MapScreen extends MainScreen {
 
     public MapScreen(Skin skin, GameScreenManager gsm) {
         super(skin, gsm);
-        map = Map.createSimple(20,20,20, 7);
-        System.out.println(map);
+        map = Map.createSimple(20,20,20, 10);
 
         mapActor = new MapActor(map, skin);
 
@@ -66,6 +63,5 @@ public class MapScreen extends MainScreen {
     private void timerActive() {
         map.nextTurn();
         mapActor.updateMap(map);
-        System.out.println(map);
     }
 }

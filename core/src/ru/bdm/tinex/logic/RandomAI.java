@@ -17,7 +17,7 @@ public class RandomAI extends AI {
     }
 
     @Override
-    public Result work(Map map) {
+    public Result work(byte[][] arr) {
         return createRandom();
     }
 }
