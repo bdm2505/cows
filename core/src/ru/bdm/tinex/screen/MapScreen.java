@@ -1,7 +1,6 @@
 package ru.bdm.tinex.screen;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -13,12 +12,12 @@ import ru.bdm.tinex.logic.*;
 
 public class MapScreen extends MainScreen {
 
-    Map map;
+    Shepherd map;
     MapActor mapActor;
 
     public MapScreen(Skin skin, GameScreenManager gsm) {
         super(skin, gsm);
-        map = Map.createSimple(20,20,20, 10);
+        map = Shepherd.createSimple(30,20,50, 10, 5);
 
         mapActor = new MapActor(map, skin);
 
@@ -43,6 +42,21 @@ public class MapScreen extends MainScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mapActor.scaleTo(0.9f);
+            }
+        });
+
+        TextButton addSpeed = new TextButton("x2", skin);
+        addSpeed.setBounds(StartGame.WIDTH - 120,StartGame.HEIGHT - 160, 100, 40);
+        stage.addActor(addSpeed);
+        addSpeed.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (duration >= 1f)
+                    duration = 0.5f;
+                else
+                    duration = 1f;
+
+                MapActor.duration = duration;
             }
         });
 

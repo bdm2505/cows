@@ -11,6 +11,10 @@ public class Pos {
         this.y = y;
     }
 
+    public static Pos of(int x, int y) {
+        return new Pos(x, y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

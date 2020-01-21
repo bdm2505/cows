@@ -7,8 +7,6 @@ import ru.bdm.tinex.StartGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = StartGame.WIDTH;
-		config.height = StartGame.HEIGHT;
 		new LwjglApplication(new StartGame(), config);
 	}
 }

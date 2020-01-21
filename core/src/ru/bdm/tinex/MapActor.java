@@ -11,19 +11,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MapActor extends Group {
-    Map map;
+    Shepherd map;
     Skin skin;
     float scale = 50f;
     boolean scaleChanged = true;
-    final static float duration = 1f;
+    public static float duration = 1f;
     HashMap<Element, ElementActor> hash = new HashMap<>();
 
-    public MapActor(Map map, Skin skin) {
+    public MapActor(Shepherd map, Skin skin) {
         this.skin = skin;
+        scale = (float) StartGame.HEIGHT / map.getHeight();
         updateMap(map);
     }
 
-    public void updateMap(Map map) {
+    public void updateMap(Shepherd map) {
         this.map = map;
         for (Element e : map.getElements()) {
             if (!hash.containsKey(e)) {

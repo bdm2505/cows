@@ -7,8 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import ru.bdm.tinex.logic.Element;
-import ru.bdm.tinex.logic.Pos;
+import ru.bdm.tinex.logic.*;
+
+import java.util.HashMap;
 
 public class ElementActor extends Group {
 
@@ -16,15 +17,23 @@ public class ElementActor extends Group {
     Skin skin;
     Image icon;
     Image way;
+
+    private static final HashMap<Class<? extends Element>, String> imageNames = new HashMap<>();
+    static {
+        imageNames.put(Stone.class, "stone");
+        imageNames.put(Grass.class, "grass");
+        imageNames.put(Cow.class, "cow");
+        imageNames.put(Wolf.class, "wolf");
+    }
     final static float duration = 1f;
-    public static final float[] ways = new float[]{0, 90, 180, 270};
+
 
     public ElementActor(Element element, Skin skin) {
 
         this.element = element;
         this.skin = skin;
 
-        icon = new Image(skin, element.type.toString());
+        icon = new Image(skin, imageNames.get(element.getClass()));
         icon.setSize(0, 0);
 
         if (element.isAnimal()) {
@@ -51,7 +60,7 @@ public class ElementActor extends Group {
     }
 
     private void updateWay() {
-        way.addAction(createRotateToAction(ways[element.toAnimal().way]));
+        way.addAction(createRotateToAction(element.toAnimal().getWay().getDegrees()));
     }
 
     public RotateToAction createRotateToAction(float way) {

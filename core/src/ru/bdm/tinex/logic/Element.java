@@ -4,29 +4,15 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Element {
-    private static int nextId = 0;
-    private static Random rand = new Random();
-    public final int id = nextId++;
-    public final TypeElement type;
 
-    public Element(TypeElement type) {
-        this.type = type;
+    private int id;
+
+    protected Element(int id) {
+        this.id = id;
     }
 
-    public static Element grass() {
-        return new Element(TypeElement.GRASS);
-    }
-
-    public static Element block() {
-        return new Element(TypeElement.BLOCK);
-    }
-
-    public static Animal cow() {
-        return new Animal(TypeElement.COW, rand.nextInt(10) + 1, rand.nextInt(4), 0);
-    }
-
-    public static Animal wolf() {
-        return new Animal(TypeElement.WOLF, rand.nextInt(10) + 1, rand.nextInt(4), 0);
+    public int getId(){
+        return id;
     }
 
     @Override
@@ -34,28 +20,51 @@ public class Element {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Element element = (Element) o;
-        return id == element.id &&
-                type == element.type;
+        return id == element.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Element{" +
                 "id=" + id +
-                ", type=" + type +
                 '}';
     }
 
     public boolean isAnimal (){
-        return getClass() == Animal.class;
+        return isType(Animal.class);
+    }
+
+    public boolean isStone() {
+        return isType(Stone.class);
+    }
+    public boolean isGrass() {
+        return isType(Grass.class);
+    }
+    public boolean isCow(){
+        return isType(Cow.class);
+    }
+    public boolean isWolf(){
+        return isType(Wolf.class);
     }
 
     public Animal toAnimal (){
         return (Animal) this;
+    }
+
+    public boolean isType(Class<? extends Element> type){
+        return getClass() == type;
+    }
+
+    public boolean isEmpty() {
+        return isType(Element.class);
+    }
+
+    public boolean nonEmpty() {
+        return !isEmpty();
     }
 }

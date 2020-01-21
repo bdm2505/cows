@@ -1,18 +1,24 @@
 package ru.bdm.tinex.logic;
 
-public class Animal extends Element {
-    public int hp;
-    public int way;
-    public final int ai;
+import java.util.Random;
 
+public class Animal extends Element {
+    private static final Random rand = new Random();
     public static int addHpForCow = 10;
     public static int addHpForWolf = 20;
+    private final int idAI;
+    private int hp;
+    private Way way;
 
-    public Animal(TypeElement type, int hp, int way, int ai) {
-        super(type);
-        this.hp = hp;
-        this.way = way;
-        this.ai = ai;
+    public Animal(int id, int idAI) {
+        super(id);
+        this.hp = 20;
+        this.way = new Way();
+        this.idAI = idAI;
+    }
+
+    public int getIdAI() {
+        return idAI;
     }
 
     @Override
@@ -20,25 +26,15 @@ public class Animal extends Element {
         return "Animal{" +
                 "hp=" + hp +
                 ", way=" + way +
-                ", id=" + id +
-                ", type=" + type +
+                ", id=" + getId() +
                 '}';
     }
 
-    public void rotateLeft() {
-        way -= 1;
-        if (way < 0) way = 3;
-    }
 
-    public void rotateRight() {
-        way += 1;
-        if (way > 3) way = 0;
-    }
-
-    public void eat(){
-        if(type == TypeElement.WOLF)
+    public void eat() {
+        if (isCow())
             hp += addHpForWolf;
-        if(type == TypeElement.COW)
+        else if (isWolf())
             hp += addHpForCow;
     }
 
@@ -48,5 +44,17 @@ public class Animal extends Element {
 
     public boolean isDepth() {
         return hp <= 0;
+    }
+
+    public Way getWay() {
+        return way;
+    }
+
+    public void rotateLeft() {
+        way.rotateLeft();
+    }
+
+    public void rotateRight() {
+        way.rotateRight();
     }
 }

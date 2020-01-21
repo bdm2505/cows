@@ -21,7 +21,6 @@ public class MaskAI extends AI {
     @Override
     Result work(byte[][] data) {
         int resultUp = 0, resultLeft = 0, resultRight = 0;
-        System.out.println(data.length + " - " + maskUp.length);
 
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[i].length; j++) {
