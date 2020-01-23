@@ -8,6 +8,14 @@ public class Cow extends Animal {
 
     @Override
     public String toString() {
-        return "Cow{}" + super.toString();
+        return "Cow{} " + super.toString();
+    }
+
+    @Override
+    public Element copy() {
+        Cow cow = new Cow(getId(), getIdAI());
+        cow.hp = hp;
+        cow.way = way.copy();
+        return cow;
     }
 }

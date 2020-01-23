@@ -62,4 +62,15 @@ public class Way {
     public boolean isDown(){
         return equals(DOWN);
     }
+
+    @Override
+    public String toString() {
+        return "Way{" +
+                 + getDegrees() +
+                '}';
+    }
+
+    public Way copy() {
+        return new Way(value);
+    }
 }

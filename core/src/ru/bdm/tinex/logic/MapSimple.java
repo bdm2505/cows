@@ -11,6 +11,7 @@ public class MapSimple extends Map {
     private HashMap<Element, Pos> elements = new HashMap<>();
     private HashMap<Pos, Element> positions = new HashMap<>();
     private Set<Animal> animals = new HashSet<>();
+    private int grass = 0;
 
     @Override
     public Element getElement(Pos pos) {
@@ -30,6 +31,11 @@ public class MapSimple extends Map {
         return animals;
     }
 
+    @Override
+    public Collection<Element> getAllElements() {
+        return elements.keySet();
+    }
+
     /**
      * put element in position
      * if map contain element, then move it
@@ -45,6 +51,8 @@ public class MapSimple extends Map {
         positions.put(pos, element);
         if(element.isAnimal())
             animals.add(element.toAnimal());
+        if(element.isGrass())
+            grass++;
     }
 
     @Override
@@ -68,10 +76,32 @@ public class MapSimple extends Map {
         return positions.containsKey(pos);
     }
 
+    @Override
+    public boolean containOf(Element element) {
+        return elements.containsKey(element);
+    }
+
+    @Override
+    public int getNumberGrass() {
+        return grass;
+    }
+
+    @Override
+    public Map copy() {
+        MapSimple map = new MapSimple();
+        return getCopyMap(map);
+    }
+
+
+
     private void remove(Element element, Pos pos) {
         positions.remove(pos);
         elements.remove(element);
         if(element.isAnimal())
             animals.remove(element.toAnimal());
+        if(element.isGrass())
+            grass--;
     }
+
+
 }

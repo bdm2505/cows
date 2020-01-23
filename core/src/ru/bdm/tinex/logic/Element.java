@@ -3,9 +3,9 @@ package ru.bdm.tinex.logic;
 import java.util.Objects;
 import java.util.Random;
 
-public class Element {
+public abstract class Element {
 
-    private int id;
+    private final int id;
 
     protected Element(int id) {
         this.id = id;
@@ -36,7 +36,7 @@ public class Element {
     }
 
     public boolean isAnimal (){
-        return isType(Animal.class);
+        return isType(Cow.class) || isType(Wolf.class);
     }
 
     public boolean isStone() {
@@ -61,10 +61,12 @@ public class Element {
     }
 
     public boolean isEmpty() {
-        return isType(Element.class);
+        return isType(Empty.class);
     }
 
     public boolean nonEmpty() {
         return !isEmpty();
     }
+
+    public abstract Element copy();
 }

@@ -11,10 +11,11 @@ public abstract class AI {
     enum Result {
         ROTATE_LEFT,
         ROTATE_RIGHT,
-        GO
+        GO,
+        REPRODUCTION
     }
 
 
 
-    abstract Result work(byte[][] data);
+    abstract Result work(Element[] data);
 }

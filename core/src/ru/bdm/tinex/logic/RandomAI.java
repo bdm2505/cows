@@ -7,17 +7,29 @@ import static ru.bdm.tinex.logic.AI.Result.*;
 public class RandomAI extends AI {
 
     private static final Random random = new Random();
-    public Result createRandom(){
-        int i = random.nextInt(3);
-        return i != 0 ? i != 1 ? GO : ROTATE_LEFT: ROTATE_RIGHT;
-    }
 
     protected RandomAI(int id) {
         super(id);
     }
 
+    public Result createRandom() {
+        switch (random.nextInt(4)) {
+            case 0:
+                return GO;
+            case 1:
+                return ROTATE_LEFT;
+            case 2:
+                return ROTATE_RIGHT;
+            case 3:
+            default:
+                return REPRODUCTION;
+        }
+    }
+
     @Override
-    public Result work(byte[][] arr) {
+    Result work(Element[] data) {
         return createRandom();
     }
+
+
 }

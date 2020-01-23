@@ -1,10 +1,12 @@
 package ru.bdm.tinex;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import ru.bdm.tinex.logic.*;
@@ -17,6 +19,7 @@ public class ElementActor extends Group {
     Skin skin;
     Image icon;
     Image way;
+    Label eat;
 
     private static final HashMap<Class<? extends Element>, String> imageNames = new HashMap<>();
     static {
@@ -36,11 +39,21 @@ public class ElementActor extends Group {
         icon = new Image(skin, imageNames.get(element.getClass()));
         icon.setSize(0, 0);
 
+
         if (element.isAnimal()) {
+
             way = new Image(skin, "way");
             way.setSize(0, 0);
             addActor(way);
-            updateWay();
+            eat = new Label(element.toAnimal().getHp() + "", skin);
+            eat.setColor(Color.BLUE);
+            addActor(eat);
+            if (element.toAnimal().getHp()<=0)
+                eat.setVisible(false);
+
+
+
+            updateAnimal();
         }
         addActor(icon);
     }
@@ -48,19 +61,31 @@ public class ElementActor extends Group {
 
     public void updateSize(float size) {
         icon.addAction(createSizeToAction(size));
-        if (!(way == null))
+        if (way != null) {
             way.addAction(createSizeToAction(size));
+
+            eat.setPosition(size - eat.getPrefWidth() / 2, - eat.getPrefHeight() / 2);
+            if(size > 30)
+                eat.setVisible(true);
+            else
+                eat.setVisible(false);
+        }
         addAction(createSizeToAction(size));
     }
 
-    public void update(Pos p, float scale) {
+    public void update(Element e, Pos p, float scale) {
+        element = e;
         addAction(createMoveToAction(p, scale));
         if(element.isAnimal())
-            updateWay();
+            updateAnimal();
     }
 
-    private void updateWay() {
+    private void updateAnimal() {
         way.addAction(createRotateToAction(element.toAnimal().getWay().getDegrees()));
+        if (element.toAnimal().getHp()<=0)
+            eat.setVisible(false);
+
+        eat.setText(element.toAnimal().getHp());
     }
 
     public RotateToAction createRotateToAction(float way) {

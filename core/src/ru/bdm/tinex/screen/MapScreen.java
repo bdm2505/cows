@@ -8,18 +8,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import ru.bdm.tinex.GameScreenManager;
 import ru.bdm.tinex.MapActor;
 import ru.bdm.tinex.StartGame;
+import ru.bdm.tinex.ThreadManager;
 import ru.bdm.tinex.logic.*;
 
 public class MapScreen extends MainScreen {
 
-    Shepherd map;
+    int speed = 1;
     MapActor mapActor;
+    ThreadManager manager;
 
     public MapScreen(Skin skin, GameScreenManager gsm) {
         super(skin, gsm);
-        map = Shepherd.createSimple(30,20,50, 10, 5);
+        final Shepherd shepherd = Shepherd.createSimple(new MapArray(), 150,100,2000, 500, 250);
 
-        mapActor = new MapActor(map, skin);
+        mapActor = new MapActor(shepherd.getMap().copy(), skin);
+        manager = new ThreadManager(shepherd, mapActor);
+
 
         final ScrollPane pane = new ScrollPane(mapActor);
         pane.setSize(StartGame.WIDTH, StartGame.HEIGHT);
@@ -51,12 +55,39 @@ public class MapScreen extends MainScreen {
         addSpeed.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (duration >= 1f)
-                    duration = 0.5f;
-                else
-                    duration = 1f;
+                speed = 2;
+//                if (speed == 1)
+//                    speed = 2;
+//                else
+//                    speed = 1;
 
-                MapActor.duration = duration;
+            }
+        });
+
+        TextButton addSpeedX10 = new TextButton("x10", skin);
+        addSpeedX10.setBounds(StartGame.WIDTH - 120,StartGame.HEIGHT - 210, 100, 40);
+        stage.addActor(addSpeedX10);
+        addSpeedX10.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (speed == 1)
+                    speed = 10;
+                else
+                    speed = 1;
+
+            }
+        });
+        TextButton addSpeedX100 = new TextButton("x100", skin);
+        addSpeedX100.setBounds(StartGame.WIDTH - 120,StartGame.HEIGHT - 260, 100, 40);
+        stage.addActor(addSpeedX100);
+        addSpeedX100.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (speed == 1)
+                    speed = 100;
+                else
+                    speed = 1;
+
             }
         });
 
@@ -75,7 +106,7 @@ public class MapScreen extends MainScreen {
     }
 
     private void timerActive() {
-        map.nextTurn();
-        mapActor.updateMap(map);
+
+        manager.put(speed);
     }
 }

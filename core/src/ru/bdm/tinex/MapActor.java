@@ -11,26 +11,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MapActor extends Group {
-    Shepherd map;
+    Map map;
     Skin skin;
     float scale = 50f;
     boolean scaleChanged = true;
     public static float duration = 1f;
     HashMap<Element, ElementActor> hash = new HashMap<>();
 
-    public MapActor(Shepherd map, Skin skin) {
+    public MapActor(Map map, Skin skin) {
         this.skin = skin;
         scale = (float) StartGame.HEIGHT / map.getHeight();
+        System.out.println("scale=" + scale);
         updateMap(map);
     }
 
-    public void updateMap(Shepherd map) {
+    public void updateMap(Map map) {
         this.map = map;
-        for (Element e : map.getElements()) {
+        System.out.println(map.getAnimals().size());
+        for (Element e : map.getAllElements()) {
             if (!hash.containsKey(e)) {
 
                 ElementActor actor = new ElementActor(e, skin) ;
-                Pos p = map.get(e);
+                Pos p = map.getPosition(e);
                 actor.setBounds(p.x * scale, p.y * scale, 0, 0);
                 actor.updateSize(scale);
                 addActor(actor);
@@ -40,7 +42,7 @@ public class MapActor extends Group {
                 if (scaleChanged) {
                     actor.updateSize(scale);
                 }
-                actor.update(map.get(e), scale);
+                actor.update(e, map.getPosition(e), scale);
 
             }
         }
@@ -54,7 +56,7 @@ public class MapActor extends Group {
     private void cleanElements(){
         Set<Element> removeSet = new HashSet<>();
         for(Element element: hash.keySet()){
-            if (!map.contains(element)){
+            if (!map.containOf(element)){
                 hash.get(element).removeActor();
                 removeSet.add(element);
             }

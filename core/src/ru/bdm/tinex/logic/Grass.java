@@ -10,4 +10,9 @@ public class Grass extends Element {
     public String toString() {
         return "Grass{} " + super.toString();
     }
+
+    @Override
+    public Element copy() {
+        return this;
+    }
 }

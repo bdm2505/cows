@@ -45,6 +45,6 @@ public class CowMaskAI extends MaskAI {
     };
 
     public CowMaskAI(int id) {
-        super(id, myMaskUp, myMaskRotateLeft, myMaskRotateRight);
+        super(id);
     }
 }

@@ -9,4 +9,9 @@ public class Stone extends Element {
     public String toString() {
         return "Stone{} " + super.toString();
     }
+
+    @Override
+    public Element copy() {
+        return this;
+    }
 }

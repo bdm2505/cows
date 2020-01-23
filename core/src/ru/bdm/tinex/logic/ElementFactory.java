@@ -1,11 +1,9 @@
 package ru.bdm.tinex.logic;
 
-import java.util.Random;
 
 public class ElementFactory {
 
     private static int nextId = 0;
-    private static Random rand = new Random();
     private static Empty emptySingle = new Empty(getNextId());
 
     private static int getNextId(){
@@ -33,4 +31,10 @@ public class ElementFactory {
         return emptySingle;
     }
 
+    public static Animal copy(Animal animal) {
+        if(animal.isWolf())
+            return wolf(animal.getIdAI());
+        else
+            return cow(animal.getIdAI());
+    }
 }

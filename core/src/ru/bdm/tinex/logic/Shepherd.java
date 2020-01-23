@@ -1,10 +1,8 @@
 package ru.bdm.tinex.logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
-
 
 
 public class Shepherd {
@@ -14,18 +12,20 @@ public class Shepherd {
     private static int nextIdAI = 1;
 
 
-    public int grass = 0;
-    public int maxGrass = 20;
+    public int maxGrass;
 
     private Map map;
-    private HashMap<Integer, AI> aiMap = new HashMap<>();
+    private AIManager manager = new AIManager();
+
+    private HashMap<Animal, Pos> goAnimals = new HashMap<>();
+    private ArrayList<Animal> depth = new ArrayList<>();
+
 
     public Shepherd(Map map) {
         this.map = map;
     }
 
-    public static Shepherd createSimple(int w, int h, int grass, int cow, int wolf) {
-        Map map = new MapSimple();
+    public static Shepherd createSimple(Map map, int w, int h, int grass, int cow, int wolf) {
         map.setSize(w, h);
         Shepherd shepherd = new Shepherd(map);
         shepherd.maxGrass = grass;
@@ -40,17 +40,15 @@ public class Shepherd {
             map.put(ElementFactory.stone(), new Pos(0, i));
             map.put(ElementFactory.stone(), new Pos(w - 1, i));
         }
-        for (int i = 0; i < grass; i++) {
-            map.randomEmptyPut(ElementFactory.grass());
-        }
+        map.randomPutGrass(grass);
         for (int i = 0; i < cow; i++) {
             AI ai = MaskAI.createRandom(nextIdAI++);
-            shepherd.aiMap.put(ai.id, ai);
-            map.randomEmptyPut(ElementFactory.cow(0));
+            shepherd.addAI(ai);
+            map.randomEmptyPut(ElementFactory.cow(ai.id));
         }
         for (int i = 0; i < wolf; i++) {
             AI ai = MaskAI.createRandom(nextIdAI++);
-            shepherd.aiMap.put(ai.id, ai);
+            shepherd.addAI(ai);
             map.randomEmptyPut(ElementFactory.wolf(ai.id));
         }
         return shepherd;
@@ -88,76 +86,97 @@ public class Shepherd {
     }
 
     public void addAI(AI ai) {
-        aiMap.put(ai.id, ai);
+        manager.registration(ai);
     }
 
     public void nextTurn() {
-        HashMap<Animal, Pos> goAnimals = new HashMap<>();
+        goAnimals.clear();
 
+        calculateNextPositionAnimals();
+        goAnimals();
+        deleteDepthAnimal();
+        updateEatAnimals();
+        addTheMissingGrass();
+    }
+
+    private void addTheMissingGrass() {
+        if (maxGrass - map.getNumberGrass() > 0)
+            map.randomPutGrass(maxGrass - map.getNumberGrass());
+
+    }
+
+    private void updateEatAnimals() {
         for (Animal animal : map.getAnimals()) {
-
-            AI.Result result = aiMap.get(animal.getIdAI()).work(listInfoAnimal(animal));
-            switch (result) {
-                case ROTATE_LEFT:
-                    animal.rotateLeft();
-                    break;
-                case ROTATE_RIGHT:
-                    animal.rotateRight();
-                    break;
-                case GO:
-                    int dx = 0, dy = 0;
-                    if (animal.getWay().isUp()) dy = 1;
-                    if (animal.getWay().isDown()) dy = -1;
-                    if (animal.getWay().isLeft()) dx = -1;
-                    if (animal.getWay().isRight()) dx = 1;
-                    Pos current = map.getPosition(animal);
-                    goAnimals.put(animal, new Pos(current.x + dx, current.y + dy));
-            }
+            animal.updateEat();
         }
+    }
 
-
-        for (Animal a : goAnimals.keySet()) {
-            map.remove(a);
-        }
-
-        for (Animal a : goAnimals.keySet()) {
-            go(a, goAnimals.get(a));
-        }
-        Set<Animal> depth = new HashSet<>();
+    private void deleteDepthAnimal() {
+        depth.clear();
 
         for (Animal a : map.getAnimals()) {
             if (a.isDepth()) {
                 depth.add(a);
             }
-            a.move();
         }
         for (Animal a : depth) {
             map.remove(a);
         }
+    }
 
-        while (grass < maxGrass) {
-            map.randomEmptyPut(ElementFactory.grass());
+    private void goAnimals() {
+        for (Animal a : goAnimals.keySet()) {
+            map.remove(a);
+        }
+        for (Animal a : goAnimals.keySet()) {
+            go(a, goAnimals.get(a));
         }
     }
 
-    
-    public byte[][] listInfoAnimal(Animal animal) {
-        return new byte[][]{
-                listForOneType(animal, Stone.class),
-                listForOneType(animal, Grass.class),
-                listForOneType(animal, Cow.class),
-                listForOneType(animal, Wolf.class)
-        };
-    }
-
-    public byte[] listForOneType(Animal animal, Class<? extends Element> type) {
-        Element [] elements = map.getSeeArea(animal);
-
-        byte[] result = new byte[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            result[i] = (byte) (elements[i].isType(type) ? 1 : 0);
+    private void calculateNextPositionAnimals() {
+        for (Animal animal : map.getAnimals()) {
+            nextAction(animal);
         }
-        return result;
     }
 
+    private void nextAction(Animal animal) {
+        AI.Result result = manager.nextResult(animal, map.getSeeArea(animal));
+        switch (result) {
+            case ROTATE_LEFT:
+                animal.rotateLeft();
+                break;
+            case ROTATE_RIGHT:
+                animal.rotateRight();
+                break;
+            case GO:
+                Pos nextPos = nextPositionAnimal(animal.getWay(), map.getPosition(animal));
+                goAnimals.put(animal, nextPos);
+                break;
+            case REPRODUCTION:
+                if (animal.getHp() > 20) {
+                    animalReproduction(animal);
+                }
+        }
+    }
+
+    private void animalReproduction(Animal animal) {
+        Animal repAnimal = animal.reproduction();
+        Pos current = map.getPosition(animal);
+        Pos posNewAnimal = Pos.of(current.x + rand.nextInt(3) - 1, current.y + rand.nextInt(3) - 1);
+        goAnimals.put(repAnimal, posNewAnimal);
+    }
+
+    private Pos nextPositionAnimal(Way way, Pos current) {
+        int dx = 0, dy = 0;
+        if (way.isUp()) dy = 1;
+        if (way.isDown()) dy = -1;
+        if (way.isLeft()) dx = -1;
+        if (way.isRight()) dx = 1;
+        return new Pos(current.x + dx, current.y + dy);
+    }
+
+
+    public Map getMap() {
+        return map;
+    }
 }

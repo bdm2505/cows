@@ -9,4 +9,12 @@ public class Wolf extends Animal {
     public String toString() {
         return "Wolf{} " + super.toString();
     }
+
+    @Override
+    public Element copy() {
+        Wolf wolf = new Wolf(getId(), getIdAI());
+        wolf.hp = hp;
+        wolf.way = way.copy();
+        return wolf;
+    }
 }

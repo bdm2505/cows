@@ -2,19 +2,22 @@ package ru.bdm.tinex.logic;
 
 import java.util.Random;
 
-public class Animal extends Element {
+public abstract class Animal extends Element {
     private static final Random rand = new Random();
     public static int addHpForCow = 10;
     public static int addHpForWolf = 20;
     private final int idAI;
-    private int hp;
-    private Way way;
-
-    public Animal(int id, int idAI) {
+    protected int hp;
+    protected Way way;
+    protected Animal(int id, int idAI) {
         super(id);
         this.hp = 20;
-        this.way = new Way();
+        this.way = Way.randomWay();
         this.idAI = idAI;
+    }
+
+    public int getHp() {
+        return hp;
     }
 
     public int getIdAI() {
@@ -38,7 +41,7 @@ public class Animal extends Element {
             hp += addHpForCow;
     }
 
-    public void move() {
+    public void updateEat() {
         hp -= 1;
     }
 
@@ -56,5 +59,12 @@ public class Animal extends Element {
 
     public void rotateRight() {
         way.rotateRight();
+    }
+
+    public Animal reproduction() {
+        Animal animal = ElementFactory.copy(this);
+        animal.hp = hp / 2;
+        hp = hp - hp / 2;
+        return animal;
     }
 }
