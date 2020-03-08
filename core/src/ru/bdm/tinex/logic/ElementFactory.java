@@ -31,10 +31,10 @@ public class ElementFactory {
         return emptySingle;
     }
 
-    public static Animal copy(Animal animal) {
+    public static Animal copy(Animal animal, int idAi) {
         if(animal.isWolf())
-            return wolf(animal.getIdAI());
+            return wolf(idAi);
         else
-            return cow(animal.getIdAI());
+            return cow(idAi);
     }
 }

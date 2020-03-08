@@ -8,7 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class ThreadManager extends Thread {
 
-    ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<Integer>(10);
+    ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<Integer>(4);
 
     Shepherd shepherd;
     MapActor actor;
@@ -51,8 +51,9 @@ public class ThreadManager extends Thread {
 
     public void put(int number) {
         try {
-            queue.put(number);
-        } catch (InterruptedException e) {
+            queue.add(number);
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }

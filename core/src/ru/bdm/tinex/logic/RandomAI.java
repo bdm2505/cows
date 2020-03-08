@@ -31,5 +31,10 @@ public class RandomAI extends AI {
         return createRandom();
     }
 
+    @Override
+    int mutable(AIManager manager) {
+        return id;
+    }
+
 
 }

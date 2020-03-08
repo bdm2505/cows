@@ -5,24 +5,34 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ConsoleTest {
 
     public static void main(String[] args) {
-        Shepherd shepherd = Shepherd.createSimple(new MapSimple(), 300,200,10000, 1000, 500);
-        time(shepherd);
+        int NUMBER = 30;
+        double simple = 0;
+        double array = 0;
 
-        shepherd = Shepherd.createSimple(new MapArray(), 3000,200,10000, 1000, 500);
-        time(shepherd);
+        for (int i = 0; i < NUMBER; i++) {
 
-        shepherd = Shepherd.createSimple(new MapArray(), 10 ,10, 10,10,10);
-        System.out.println(shepherd.getMap());
-        System.out.println(shepherd.getMap().copy());
+
+            Shepherd shepherd = Shepherd.createSimple(new MapSimple(), 100, 100, 5000, 1000, 500);
+            simple += time(shepherd);
+
+            shepherd = Shepherd.createSimple(new MapArray(), 100, 100, 5000, 1000, 500);
+            array += time(shepherd);
+
+        }
+
+        System.out.println("simple = " + simple / NUMBER + "  array = " + array / NUMBER);
+//        shepherd = Shepherd.createSimple(new MapArray(), 10 ,10, 10,10,10);
+//        System.out.println(shepherd.getMap());
+//        System.out.println(shepherd.getMap().copy());
     }
 
-    private static void time(Shepherd shepherd) {
+    private static double time(Shepherd shepherd) {
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
             shepherd.nextTurn();
         }
         long endTime = System.currentTimeMillis();
 
-        System.out.println("time=" + (double)(endTime - startTime) / 1000);
+        return  (double)(endTime - startTime) / 1000;
     }
 }

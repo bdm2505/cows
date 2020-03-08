@@ -1,11 +1,29 @@
 package ru.bdm.tinex.logic;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Random;
 
 public abstract class Map {
     private static Random rand = new Random();
     protected int width, height;
+    int currentTurn = 0;
+    int numberAI = 0;
 
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public int getNumberAI() {
+        return numberAI;
+    }
+
+    public void setNumberAI(int numberAI) {
+        this.numberAI = numberAI;
+    }
 
     public abstract Element getElement(Pos pos);
 
@@ -25,6 +43,7 @@ public abstract class Map {
     public abstract void remove(Element element);
 
     public abstract void remove(Pos pos);
+
     public abstract boolean containOf(Pos pos);
 
     public Element[] getSeeArea(Animal animal) {
@@ -44,16 +63,15 @@ public abstract class Map {
             pos = Pos.of(rand.nextInt(width - 2) + 1, rand.nextInt(height - 2) + 1);
 
         } while (containOf(pos) && repeat-- > 0);
-        if(repeat > 0)
+        if (repeat > 0)
             put(e, pos);
     }
 
-    public void randomPutGrass(int number){
+    public void randomPutGrass(int number) {
         for (int i = 0; i < number; i++) {
             randomEmptyPut(ElementFactory.grass());
         }
     }
-
 
 
     public void setSize(int w, int h) {
@@ -76,23 +94,41 @@ public abstract class Map {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Element e:getAllElements()){
+        for (Element e : getAllElements()) {
             sb.append("  ").append(e).append(" -> ").append(getPosition(e)).append("\n");
         }
 
         return "MapSimple{" +
                 "\n" + sb.toString() +
-                "} " ;
+                "} ";
     }
 
     public abstract Map copy();
 
-    protected Map getCopyMap(Map map) {
+    protected Map fillCopyMap(Map map) {
         map.setSize(getWidth(), getHeight());
-        for(Element element: getAllElements()){
+        map.setCurrentTurn(getCurrentTurn());
+        map.setNumberAI(getNumberAI());
+        for (Element element : getAllElements()) {
             Element copyElement = element.copy();
             map.put(copyElement, getPosition(element));
         }
         return map;
+    }
+
+    protected int getCountAnimal(Class<? extends Animal> type){
+        int count = 0;
+        for(Animal animal:getAnimals()){
+            if(animal.isType(type))
+                count++;
+        }
+        return count;
+    }
+
+    public int getCountCow(){
+        return getCountAnimal(Cow.class);
+    }
+    public int getCountWolf(){
+        return getCountAnimal(Wolf.class);
     }
 }

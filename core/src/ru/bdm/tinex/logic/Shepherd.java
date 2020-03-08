@@ -8,12 +8,11 @@ import java.util.Random;
 public class Shepherd {
 
 
+    public static final float MUTATION_PROBABILITY = 0.2f;
     private static Random rand = new Random();
     private static int nextIdAI = 1;
-
-
     public int maxGrass;
-
+    private int currentTurn = 0;
     private Map map;
     private AIManager manager = new AIManager();
 
@@ -42,14 +41,12 @@ public class Shepherd {
         }
         map.randomPutGrass(grass);
         for (int i = 0; i < cow; i++) {
-            AI ai = MaskAI.createRandom(nextIdAI++);
-            shepherd.addAI(ai);
-            map.randomEmptyPut(ElementFactory.cow(ai.id));
+            int idAi = shepherd.manager.createRandomMastAi();
+            map.randomEmptyPut(ElementFactory.cow(idAi));
         }
         for (int i = 0; i < wolf; i++) {
-            AI ai = MaskAI.createRandom(nextIdAI++);
-            shepherd.addAI(ai);
-            map.randomEmptyPut(ElementFactory.wolf(ai.id));
+            int idAi = shepherd.manager.createRandomMastAi();
+            map.randomEmptyPut(ElementFactory.wolf(idAi));
         }
         return shepherd;
     }
@@ -90,13 +87,27 @@ public class Shepherd {
     }
 
     public void nextTurn() {
+        currentTurn++;
+        map.setCurrentTurn(currentTurn);
         goAnimals.clear();
+
+        if (manager.getNumberAI() > map.getAnimals().size() * 2)
+            manager.removeDepthAI(map.getAnimals());
 
         calculateNextPositionAnimals();
         goAnimals();
         deleteDepthAnimal();
         updateEatAnimals();
         addTheMissingGrass();
+        if (map.getCurrentTurn() % 1000 == 0)
+            for (int i = 0; i < 10; i++) {
+                int idAiWolf = manager.createRandomMastAi();
+                map.randomEmptyPut(ElementFactory.wolf(idAiWolf));
+                int idAiCow = manager.createRandomMastAi();
+                map.randomEmptyPut(ElementFactory.cow(idAiCow));
+            }
+
+        map.setNumberAI(manager.getNumberAI());
     }
 
     private void addTheMissingGrass() {
@@ -153,14 +164,19 @@ public class Shepherd {
                 goAnimals.put(animal, nextPos);
                 break;
             case REPRODUCTION:
-                if (animal.getHp() > 20) {
+                if (animal.isReproduction()) {
                     animalReproduction(animal);
                 }
         }
     }
 
     private void animalReproduction(Animal animal) {
-        Animal repAnimal = animal.reproduction();
+        int idAi = animal.getIdAI();
+        if (rand.nextFloat() < MUTATION_PROBABILITY) {
+            idAi = manager.mutation(idAi);
+        }
+        Animal repAnimal = animal.reproduction(idAi);
+
         Pos current = map.getPosition(animal);
         Pos posNewAnimal = Pos.of(current.x + rand.nextInt(3) - 1, current.y + rand.nextInt(3) - 1);
         goAnimals.put(repAnimal, posNewAnimal);

@@ -19,7 +19,7 @@ public class MapScreen extends MainScreen {
 
     public MapScreen(Skin skin, GameScreenManager gsm) {
         super(skin, gsm);
-        final Shepherd shepherd = Shepherd.createSimple(new MapArray(), 150,100,2000, 500, 250);
+        final Shepherd shepherd = Shepherd.createSimple(new MapArray(), 150,100,2000, 500, 500);
 
         mapActor = new MapActor(shepherd.getMap().copy(), skin);
         manager = new ThreadManager(shepherd, mapActor);

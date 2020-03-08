@@ -12,6 +12,11 @@ public class Cow extends Animal {
     }
 
     @Override
+    protected int addHpForEat() {
+        return 20;
+    }
+
+    @Override
     public Element copy() {
         Cow cow = new Cow(getId(), getIdAI());
         cow.hp = hp;

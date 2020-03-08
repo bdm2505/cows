@@ -6,6 +6,10 @@ import java.util.Random;
 public class MaskAI extends AI {
 
 
+    public MaskAI(int id, HashMap<Mask, Result> masks) {
+        super(id);
+        this.masks = masks;
+    }
 
     private HashMap<Mask, AI.Result> masks = new HashMap<>();
     private HashMap<Mask, Integer> results = new HashMap<>();
@@ -37,6 +41,17 @@ public class MaskAI extends AI {
         Mask max = getMaxMask();
 
         return masks.get(max);
+    }
+
+    @Override
+    int mutable(AIManager manager) {
+        HashMap<Mask, AI.Result> newMasks = new HashMap<>();
+        for(Mask mask:masks.keySet()){
+            newMasks.put(mask.mutation(), masks.get(mask));
+        }
+        MaskAI ai = new MaskAI(AIManager.getNextId(), newMasks);
+        manager.registration(ai);
+        return ai.id;
     }
 
     private Mask getMaxMask() {

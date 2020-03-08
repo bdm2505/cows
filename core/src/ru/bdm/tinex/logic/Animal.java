@@ -4,8 +4,6 @@ import java.util.Random;
 
 public abstract class Animal extends Element {
     private static final Random rand = new Random();
-    public static int addHpForCow = 10;
-    public static int addHpForWolf = 20;
     private final int idAI;
     protected int hp;
     protected Way way;
@@ -35,10 +33,7 @@ public abstract class Animal extends Element {
 
 
     public void eat() {
-        if (isCow())
-            hp += addHpForWolf;
-        else if (isWolf())
-            hp += addHpForCow;
+        hp += addHpForEat();
     }
 
     public void updateEat() {
@@ -61,10 +56,16 @@ public abstract class Animal extends Element {
         way.rotateRight();
     }
 
-    public Animal reproduction() {
-        Animal animal = ElementFactory.copy(this);
+    public Animal reproduction(int idAi) {
+        Animal animal = ElementFactory.copy(this, idAi);
         animal.hp = hp / 2;
         hp = hp - hp / 2;
         return animal;
     }
+
+    public boolean isReproduction(){
+        return getHp() > addHpForEat();
+    }
+
+    protected abstract int addHpForEat();
 }

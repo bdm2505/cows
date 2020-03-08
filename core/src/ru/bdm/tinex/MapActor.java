@@ -27,7 +27,8 @@ public class MapActor extends Group {
 
     public void updateMap(Map map) {
         this.map = map;
-        System.out.println(map.getAnimals().size());
+        System.out.println("cow=" + map.getCountCow() + ", wolf=" + map.getCountWolf() + ", ai=" + map.getNumberAI() +
+                ", turn=" + map.getCurrentTurn() + ", grass=" + map.getNumberGrass() );
         for (Element e : map.getAllElements()) {
             if (!hash.containsKey(e)) {
 

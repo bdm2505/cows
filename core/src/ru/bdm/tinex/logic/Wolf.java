@@ -1,6 +1,7 @@
 package ru.bdm.tinex.logic;
 
 public class Wolf extends Animal {
+
     public Wolf(int id, int idAI) {
         super(id, idAI);
     }
@@ -8,6 +9,11 @@ public class Wolf extends Animal {
     @Override
     public String toString() {
         return "Wolf{} " + super.toString();
+    }
+
+    @Override
+    protected int addHpForEat() {
+        return 70;
     }
 
     @Override

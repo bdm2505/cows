@@ -89,7 +89,7 @@ public class MapSimple extends Map {
     @Override
     public Map copy() {
         MapSimple map = new MapSimple();
-        return getCopyMap(map);
+        return fillCopyMap(map);
     }
 
 

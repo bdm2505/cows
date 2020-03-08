@@ -113,6 +113,6 @@ public class MapArray extends Map {
     @Override
     public Map copy() {
         MapArray map = new MapArray();
-        return getCopyMap(map);
+        return fillCopyMap(map);
     }
 }

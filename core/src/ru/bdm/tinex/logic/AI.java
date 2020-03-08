@@ -18,4 +18,5 @@ public abstract class AI {
 
 
     abstract Result work(Element[] data);
+    abstract int mutable(AIManager manager);
 }
